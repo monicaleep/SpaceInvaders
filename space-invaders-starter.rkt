@@ -279,7 +279,7 @@
 
 ;; Invader Missile -> Boolean
 ;; if invader and missile are intercepted produce true
-;; hit is defined at delta x <= 5 delta y <=10
+;; hit is defined delta x <= 10 AND delta y <=10
 (check-expect (is-hit? (make-invader 100 100 1) (make-missile 50 50)) false)
 (check-expect (is-hit? (make-invader 100 100 1) (make-missile 100 100)) true)
 (check-expect (is-hit? (make-invader 100 100 -1) (make-missile 105 110)) true)
@@ -306,7 +306,7 @@
 (check-expect (update-missiles (cons (make-missile 100 -100) (cons (make-missile 100 100) empty)))
               (cons (make-missile 100 (- 100 MISSILE-SPEED)) empty))
 
-;(define (update-missiles lom) lom)
+;(define (update-missiles lom) lom) ;stub
 
 (define (update-missiles lom)
   (cond [(empty? lom) empty]
@@ -387,11 +387,11 @@
 
 
 ;;Tank -> Tank
-;; Move the tank along screen
-(check-expect (move-tank T0) (make-tank (+ (* 1 TANK-SPEED) (/ WIDTH 2)) 1))  ;; in middle, moving right
-(check-expect (move-tank T2) (make-tank (+ (* -1 TANK-SPEED) 50) -1)) ;;moving left
-(check-expect (move-tank (make-tank TANK-TURNR 1)) (make-tank TANK-TURNR 1)) ;;right edge moving right
-(check-expect (move-tank (make-tank TANK-TURNL -1)) (make-tank TANK-TURNL -1)) ;;left edge moving left
+;; Move the tank along screen by changing (tank-x t) by TANK-SPEED, direction determined by (tank-dir t)
+(check-expect (move-tank T0) (make-tank (+ (* 1 TANK-SPEED) (/ WIDTH 2)) 1))  
+(check-expect (move-tank T2) (make-tank (+ (* -1 TANK-SPEED) 50) -1)) 
+(check-expect (move-tank (make-tank TANK-TURNR 1)) (make-tank TANK-TURNR 1)) 
+(check-expect (move-tank (make-tank TANK-TURNL -1)) (make-tank TANK-TURNL -1)) 
 
 ;(define (move-tank t) t) ;stub
 (define (move-tank t)
@@ -480,7 +480,8 @@
 ;; Invader -> Image
 ;; add invader to the background
 (check-expect (add-invader-on I1 BACKGROUND) (place-image INVADER 150 100 BACKGROUND))
-;(define (add-invader-on i img) BACKGROUND)
+
+;(define (add-invader-on i img) BACKGROUND) ;stub
 
 (define (add-invader-on i img)
   (place-image INVADER (invader-x i) (invader-y i) img))
@@ -568,9 +569,3 @@
         [(and (= -1 (tank-dir (game-t g))) (key=? ke "right"))
          (make-game (game-invaders g) (game-missiles g) (make-tank (tank-x (game-t g)) 1))]
         [else g]))
-
-#;
-(define (fn-for-game s)
-  (... (fn-for-loinvader (game-invaders s))
-       (fn-for-lom (game-missiles s))
-       (fn-for-tank (game-t s))))
